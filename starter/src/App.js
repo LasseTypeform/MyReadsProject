@@ -25,7 +25,7 @@ function App() {
   }, [])
 
 
-  console.log('bookState', bookState)
+  // console.log('bookState', bookState)
   return (
     <div className="app">
       {showSearchPage ? (
