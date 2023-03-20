@@ -3,7 +3,7 @@ import Bookshelf from './Bookshelf'
 
 const BookshelfContainer = ({bookState}) => {
 
-  console.log('bookState in container', bookState)
+  // console.log('bookState in container', bookState)
 
   const filterShelfs = (bookState, shelf) => {
     let matchingBooks = bookState.filter(book => book.shelf === shelf).map(filteredBook => filteredBook)
