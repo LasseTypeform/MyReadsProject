@@ -1,7 +1,9 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import BookshelfContainer from './components/Bookshelf-container'
+import SearchPage from "./components/SearchPage";
 import { getAll } from './BooksAPI'
+import {Route, Routes, Link } from 'react-router-dom'
 
 function App() {
   const [showSearchPage, setShowSearchpage] = useState(false);
@@ -28,37 +30,20 @@ function App() {
   // console.log('bookState', bookState)
   return (
     <div className="app">
-      {showSearchPage ? (
-        <div className="search-books">
-          <div className="search-books-bar">
-            <a
-              className="close-search"
-              onClick={() => setShowSearchpage(!showSearchPage)}
-            >
-              Close
-            </a>
-            <div className="search-books-input-wrapper">
-              <input
-                type="text"
-                placeholder="Search by title, author, or ISBN"
-              />
-            </div>
-          </div>
-          <div className="search-books-results">
-            <ol className="books-grid"></ol>
-          </div>
-        </div>
-      ) : (
-        <div className="list-books">
+        <Routes>
+        <Route exact path="/" element={
+          <div className="list-books">
           <div className="list-books-title">
             <h1>MyReads</h1>
           </div>
           <BookshelfContainer bookState={bookState}/>
           <div className="open-search">
-            <a onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a>
+            <Link to="/search">Add a book</Link>
           </div>
         </div>
-      )}
+        }/>
+        <Route path="/search" element={<SearchPage/>}/>
+        </Routes>
     </div>
   );
 }
