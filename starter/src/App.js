@@ -6,19 +6,21 @@ import { getAll } from './BooksAPI'
 import {Route, Routes, Link } from 'react-router-dom'
 
 function App() {
-  const [showSearchPage, setShowSearchpage] = useState(false);
+  
   const [bookState, setBookState] = useState([]);
+  
+
+  const getbooks = async () => {
+    try {
+      let res = await getAll()
+      setBookState(res)
+    } catch (error) { console.log(error.message) }
+  }
 
   useEffect(() => {
     let booksRetrieved = false
 
     if (!booksRetrieved) {
-      const getbooks = async () => {
-        try {
-          let res = await getAll()
-          setBookState(res)
-        } catch (error) { console.log(error.messe) }
-      }
       getbooks()
     }
     return () => {
@@ -27,7 +29,7 @@ function App() {
   }, [])
 
 
-  // console.log('bookState', bookState)
+  console.log('bookState', bookState)
   return (
     <div className="app">
         <Routes>
@@ -36,7 +38,7 @@ function App() {
           <div className="list-books-title">
             <h1>MyReads</h1>
           </div>
-          <BookshelfContainer bookState={bookState}/>
+          <BookshelfContainer bookState={bookState} callGetbooks={getbooks}/>
           <div className="open-search">
             <Link to="/search">Add a book</Link>
           </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Bookshelf from './Bookshelf'
 
-const BookshelfContainer = ({bookState}) => {
+const BookshelfContainer = ({bookState, callGetbooks }) => {
 
   // console.log('bookState in container', bookState)
 
@@ -12,9 +12,9 @@ const BookshelfContainer = ({bookState}) => {
     return ( 
     <div className="list-books-content">
     <div>
-    { (bookState) && (<Bookshelf shelfTitle={'Currently Reading'} books={filterShelfs(bookState, "currentlyReading")}/>)}
-    { (bookState) && (<Bookshelf shelfTitle={'Want to read'} books={filterShelfs(bookState, "wantToRead")}/>)}
-    { (bookState) && (<Bookshelf shelfTitle={'Read'} books={filterShelfs(bookState, "read")}/>)}
+    { (bookState) && (<Bookshelf callGetbooks={callGetbooks} shelfTitle={'Currently Reading'} books={filterShelfs(bookState, "currentlyReading")}/>)}
+    { (bookState) && (<Bookshelf callGetbooks={callGetbooks} shelfTitle={'Want to read'} books={filterShelfs(bookState, "wantToRead")}/>)}
+    { (bookState) && (<Bookshelf callGetbooks={callGetbooks} shelfTitle={'Read'} books={filterShelfs(bookState, "read")}/>)}
     </div>
   </div> )
 
