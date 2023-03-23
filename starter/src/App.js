@@ -9,7 +9,7 @@ function App() {
   
   const [bookState, setBookState] = useState([]);
   
-
+//Function to call backend for all books, which can be used in differnt components
   const getbooks = async () => {
     try {
       let res = await getAll()
@@ -17,6 +17,8 @@ function App() {
     } catch (error) { console.log(error.message) }
   }
 
+
+// useEffect to retrieve all book
   useEffect(() => {
     let booksRetrieved = false
 
@@ -29,7 +31,7 @@ function App() {
   }, [])
 
 
-  console.log('bookState', bookState)
+  // console.log('bookState', bookState)
   return (
     <div className="app">
         <Routes>
@@ -44,7 +46,7 @@ function App() {
           </div>
         </div>
         }/>
-        <Route path="/search" element={<SearchPage/>}/>
+        <Route path="/search" element={<SearchPage bookState={bookState} callGetbooks={getbooks}/>}/>
         </Routes>
     </div>
   );

@@ -5,10 +5,11 @@ const BookshelfContainer = ({bookState, callGetbooks }) => {
 
   // console.log('bookState in container', bookState)
 
+  //Function to filter the books matching the same shelf
   const filterShelfs = (bookState, shelf) => {
     let matchingBooks = bookState.filter(book => book.shelf === shelf).map(filteredBook => filteredBook)
     return matchingBooks
-  }
+  } 
     return ( 
     <div className="list-books-content">
     <div>
