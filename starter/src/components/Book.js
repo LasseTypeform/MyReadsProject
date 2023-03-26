@@ -1,25 +1,23 @@
 import React from 'react'
 import BookShelfChanger from './BookShelfChanger'
-import { update } from '../BooksAPI'
 
 
-const Book = ({ book, shelfTitle, callGetbooks }) => {
+const Book = ({ bookState, book, shelfTitle, callGetbooks }) => {
 
     return (<li key={book.id}>
         <div className="book">
             <div className="book-top">
-                {(book.imageLinks) &&
-                    <div
+                {(book['imageLinks']) && (<div
                         className="book-cover"
                         style={{
                             width: 128,
                             height: 193,
                             backgroundImage:
-                                `url(${book.imageLinks['thumbnail']})`,
+                                `url(${book['imageLinks']['thumbnail']})`,
                         }} 
-                    ></div>
+                    ></div>)
                 }
-                <BookShelfChanger book={book} shelfTitle={shelfTitle} callGetbooks={callGetbooks}/>
+                {(book) && (<BookShelfChanger bookState={bookState} book={book} shelfTitle={shelfTitle} callGetbooks={callGetbooks}/>)}
             </div>
             <div className="book-title">{book.title}</div>
             {(book.authors) && book.authors.map(author => <div key={author} className="book-authors">{author}</div>)}
