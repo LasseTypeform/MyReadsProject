@@ -3,7 +3,7 @@ import Book from './Book'
 import PropTypes from 'prop-types'
 
 
-const Bookshelf = ({ bookState, shelfTitle, books, callGetbooks, inputState }) => {
+const Bookshelf = ({ bookState, shelf, shelfTitle, books, callGetbooks, inputState }) => {
 
     const [stateInBookshelf, setStateInBookshelf] = useState([])
 
@@ -11,7 +11,9 @@ const Bookshelf = ({ bookState, shelfTitle, books, callGetbooks, inputState }) =
         let tempBookState = false;
 
         if (!tempBookState) {
-            setStateInBookshelf(books)
+            if(shelfTitle === 'search-results') {
+                setStateInBookshelf(books)
+            } else setStateInBookshelf(bookState)
         }
         return () => {
             tempBookState = true
@@ -19,18 +21,18 @@ const Bookshelf = ({ bookState, shelfTitle, books, callGetbooks, inputState }) =
     }, [bookState,  books])
 
 
-    if(inputState === '' || inputState === undefined){
+    if((shelfTitle === 'search-results') && (stateInBookshelf === [] || inputState === '' || inputState === undefined)){
         return (<div className='no-books'></div>)
     }
     else if ((stateInBookshelf.error !== 'empty query') && (stateInBookshelf !== [])) {
-
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">{shelfTitle}</h2>
                 <div className="bookshelf-books">
                     <ol className="books-grid">
-                        {(stateInBookshelf !== [] || stateInBookshelf !== {}) && (bookState) && (stateInBookshelf.map((book) =>
-                            <Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} callGetbooks={callGetbooks} />)
+                        {(stateInBookshelf !== [] || stateInBookshelf !== {}) && (bookState) && (stateInBookshelf.map((book) => 
+                            (book.shelf === shelf) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} callGetbooks={callGetbooks} />))
+   
                         )}
                     </ol>
                 </div>

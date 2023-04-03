@@ -11,9 +11,9 @@ const BookshelfContainer = ({bookState, callGetbooks }) => {
     return ( 
     <div className="list-books-content">
     <div>
-    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelfTitle={'Currently Reading'} books={filterShelfs(bookState, "currentlyReading")}/>)}
-    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelfTitle={'Want to read'} books={filterShelfs(bookState, "wantToRead")}/>)}
-    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelfTitle={'Read'} books={filterShelfs(bookState, "read")}/>)}
+    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelf="currentlyReading" shelfTitle={'Currently Reading'} books={filterShelfs(bookState, "currentlyReading")}/>)}
+    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelf="wantToRead" shelfTitle={'Want to read'} books={filterShelfs(bookState, "wantToRead")}/>)}
+    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelf="read" shelfTitle={'Read'} books={filterShelfs(bookState, "read")}/>)}
     </div>
   </div> )
 

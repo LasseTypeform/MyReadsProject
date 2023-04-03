@@ -90,7 +90,7 @@ const SearchPage = ({ bookState, callGetbooks }) => {
           />
         </form>
       </div>
-      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelfTitle={''} books={searchBookState} inputState={inputState}/>) : (<div className="bookshelf">
+      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelfTitle={'search-results'} books={searchBookState} inputState={inputState}/>) : (<div className="bookshelf">
             <div className="bookshelf-books">
                 <p>No books matching the search</p>
             </div>
