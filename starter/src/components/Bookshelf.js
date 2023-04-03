@@ -18,8 +18,7 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, books, callGetbooks, inputSta
         return () => {
             tempBookState = true
         }
-    }, [bookState,  books])
-
+    }, [bookState,  books, shelfTitle])
 
     if((shelfTitle === 'search-results') && (stateInBookshelf === [] || inputState === '' || inputState === undefined)){
         return (<div className='no-books'></div>)
@@ -31,8 +30,7 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, books, callGetbooks, inputSta
                 <div className="bookshelf-books">
                     <ol className="books-grid">
                         {(stateInBookshelf !== [] || stateInBookshelf !== {}) && (bookState) && (stateInBookshelf.map((book) => 
-                            (book.shelf === shelf) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} callGetbooks={callGetbooks} />))
-   
+                            (book.shelf === shelf) && (book.imageLinks) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} callGetbooks={callGetbooks} />))
                         )}
                     </ol>
                 </div>
