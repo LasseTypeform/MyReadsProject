@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { search } from '../BooksAPI'
 import Bookshelf from '../components/Bookshelf'
-// import BookshelfContainer from '../components/Bookshelf-container'
-
-// Search Terms allowed :
-
 
 const SearchPage = ({ bookState, callGetbooks }) => {
 
@@ -14,41 +10,22 @@ const SearchPage = ({ bookState, callGetbooks }) => {
 
   // State for inputfield on Search page
   const [inputState, setInputState] = useState('');
-    // State for the query that matches the allowed search terms
-  // const [queryToSearchFor, setQueryToSearchFor] = useState([]);
     // State for the returned Search page Book State
   const [searchBookState, setSearchBookState] = useState([]);
-  
-
-  // Show books variable
-  let showBooks = false
 
   // Function to track queary inputs
   const getQuery = (value) => {
     let currentInput = value.trim().toLowerCase()
-
+    
+    if(currentInput === '') {
+      setSearchBookState([])
+      setInputState('')
+    } else{
       setInputState(currentInput)
-
-    // if(value !== ''){
-    //   let currentInput = value.trim().toLowerCase()
-
-    //   setInputState(currentInput)
-    // } else {
-    //   setInputState(value.trim().toLowerCase())
-      // setSearchBookState([])
-      // showBooks = false
-      // }
-
+    }  
   }
 
-   // Function slice last charactor query
-  //  const upDateQuery = () => {
-    // console.log('inputState before slice', inputState)
-    // console.log('inputState with slice', inputState.slice(0, -1))
-  //   setInputState(inputState.slice(0, -1))
-  // }
-
-
+  
   useEffect(() => {
     let searchHasBeenMade = false;
 
@@ -58,6 +35,7 @@ const SearchPage = ({ bookState, callGetbooks }) => {
     return () => { 
       searchHasBeenMade = true 
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ inputState ])
 
 
@@ -69,45 +47,32 @@ const SearchPage = ({ bookState, callGetbooks }) => {
   // Function to call Search API
   const searchBooks = async (query) => {
 
-    let bookApiHasBeenCalled = false
-    // setInputState(query)
+    // variable to check if the query comply with the allowed search terms of the Search API
     let tempQuery = allowedSearchTerms.filter(term => term.toLowerCase().includes(query)).map(ele => { return ele.toLowerCase()})
-
-    // console.log('terms / tempQuery', tempQuery)
 
     if(tempQuery.length !== 0) {
 
-      // console.log('thej', tempQuery.some( term => term.includes(inputState)))
       if(query !== '' && tempQuery.some( term => term.includes(query))) {
-        // console.log('Term allowed')
       try {
-       console.log('query', query)
-        let res = await search(query);
+        let res = await search(query, 20);
         
-        console.log('res', res)
-        {if(res.items !== []){
+        if(res){
           
-          setSearchBookState(res)
-          console.log('showBooks', showBooks)
-          showBooks = true
-          return bookApiHasBeenCalled = true
-          
-          // setInputState(query)
-        }}
+          if(res.items !== []){
+            setSearchBookState(res)
       
-      } catch (error) { console.log(error.message) }
-      
-    //  } else {
-    //   // console.log('inputState', inputState)
-    //   if(inputState.length > 2) {
-    //     upDateQuery()
-    //   }
+          } else{
+            setSearchBookState([])
+          }
+          }       
+      } catch (error) { 
+        console.log(error.message)
+       }
 
-    }
+    } 
       }
-      
-console.log('searchBookState', searchBookState)
   }
+  
   if(searchBookState !== {} || searchBookState !== []) {
   return (
     <div className="search-books">
@@ -125,10 +90,15 @@ console.log('searchBookState', searchBookState)
           />
         </form>
       </div>
-      {((searchBookState !== {}) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelfTitle={'none'} books={searchBookState}/>))}
+      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelfTitle={''} books={searchBookState} inputState={inputState}/>) : (<div className="bookshelf">
+            <div className="bookshelf-books">
+                <p>No books matching the search</p>
+            </div>
+            </div>)))  
+    }
     </div>
   )   
- }
+ } 
 }
 
 export default SearchPage;

@@ -1,30 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Book from './Book'
 import PropTypes from 'prop-types'
 
 
-const Bookshelf = ({ bookState, shelfTitle, books, callGetbooks }) => {
+const Bookshelf = ({ bookState, shelfTitle, books, callGetbooks, inputState }) => {
 
-    if((books.error !== 'empty query') && (books !== [])) {
+    const [stateInBookshelf, setStateInBookshelf] = useState([])
 
-    return (
-        <div className="bookshelf">
-            <h2 className="bookshelf-title">{shelfTitle}</h2>
-            <div className="bookshelf-books">
-                <ol className="books-grid">
-                    {(books !== [] && books !== {}) && (bookState) && (books.map((book) =>
-                        <Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} callGetbooks={callGetbooks} />)
-                    )}
-                </ol>
-            </div>
-        </div>
-    )
-    } else {
+    useEffect(() => {
+        let tempBookState = false;
+
+        if (!tempBookState) {
+            setStateInBookshelf(books)
+        }
+        return () => {
+            tempBookState = true
+        }
+    }, [bookState,  books])
+
+
+    if(inputState === '' || inputState === undefined){
+        return (<div className='no-books'></div>)
+    }
+    else if ((stateInBookshelf.error !== 'empty query') && (stateInBookshelf !== [])) {
+
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">{shelfTitle}</h2>
                 <div className="bookshelf-books">
-                    <p>No books matching the search</p>
+                    <ol className="books-grid">
+                        {(stateInBookshelf !== [] || stateInBookshelf !== {}) && (bookState) && (stateInBookshelf.map((book) =>
+                            <Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} callGetbooks={callGetbooks} />)
+                        )}
+                    </ol>
                 </div>
             </div>
         )
