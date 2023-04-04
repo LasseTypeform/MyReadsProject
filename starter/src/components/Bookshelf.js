@@ -12,7 +12,7 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, books, changingShelf, inputSt
         let tempBookState = false;
 
         if (!tempBookState) {
-            if(shelfTitle === 'search-results') {
+            if(shelfTitle === 'Search Results') {
                 setStateInBookshelf(books)
             } else setStateInBookshelf(bookState)
         }
@@ -21,7 +21,8 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, books, changingShelf, inputSt
         }
     }, [bookState,  books, shelfTitle])
 
-    if((shelfTitle === 'search-results') && (stateInBookshelf === [] || inputState === '' || inputState === undefined)){
+
+    if((shelfTitle === 'Search Results') && (stateInBookshelf === [] || inputState === '' || inputState === undefined)){
         return (<div className='no-books'></div>)
     }
     else if ((stateInBookshelf.error !== 'empty query') && (stateInBookshelf !== [])) {

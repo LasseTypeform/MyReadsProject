@@ -5,6 +5,8 @@ import PropTypes from 'prop-types'
 
 const Book = ({ bookState, book, shelfTitle, changingShelf }) => {
 
+    // console.log('book in book.js', book)
+
     return (<li key={book.id}>
         <div className="book">
             <div className="book-top">

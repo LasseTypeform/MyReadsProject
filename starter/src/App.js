@@ -9,6 +9,7 @@ function App() {
   
   const [bookState, setBookState] = useState([]);
   
+
 //Function to call backend for all books, which can be used in differnt components
 // This collection represents the books currently in the bookshelves in the app.
   const getbooks = async () => {
@@ -19,6 +20,7 @@ function App() {
   }
 //Function to change shelf of individual book
 const changeShelf = async (book, shelfChosen) => {
+  // console.log('bookState before change', bookState)
   book.shelf = shelfChosen
   try {
       let res = await update(book, shelfChosen);
@@ -26,7 +28,7 @@ const changeShelf = async (book, shelfChosen) => {
       if(res) {
         setBookState([...bookState.filter((b) => b.id !== book.id, book)])
       }
-      
+      console.log('bookState after change', bookState)
   } catch (error) { console.log(error.message) }
 
 }

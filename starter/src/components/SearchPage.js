@@ -78,6 +78,9 @@ const SearchPage = ({ bookState, callGetbooks, changingShelf }) => {
   }
   
   if(searchBookState !== {} || searchBookState !== []) {
+
+    // console.log('bookState on SearchPage', bookState)
+    // console.log('searchBookState on SearchPage', searchBookState)
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -94,7 +97,7 @@ const SearchPage = ({ bookState, callGetbooks, changingShelf }) => {
           />
         </form>
       </div>
-      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} changingShelf={changingShelf} shelfTitle={'search-results'} books={searchBookState} inputState={inputState}/>) : (<div className="bookshelf">
+      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} changingShelf={changingShelf} shelfTitle={'Search Results'} books={searchBookState} inputState={inputState}/>) : (<div className="bookshelf">
             <div className="bookshelf-books">
                 <p>No books matching the search</p>
             </div>
