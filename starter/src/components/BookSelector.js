@@ -1,40 +1,38 @@
-
 import React, { useState, useEffect } from 'react'
-import { update } from '../BooksAPI'
+import PropTypes from 'prop-types'
 
-
-const BookSelector = ({ bookState, book, shelfTitle, callGetbooks }) => {
+const BookSelector = ({ bookState, book, changingShelf }) => {
     const [options, setOptions] = useState([['', ''], ['', ''], ['', ''], ['', '']]);
     const [currentBookState, setCurrentBookState] = useState([]);
 
-    // function to check if current book is included in the callGetbooks array
-    const compare = () => {
-       
-        if(bookState) {
-        bookState.forEach(ele => {
-            if(ele.id === book.id){
-                setCurrentBookState(ele)
-                
-                setSelectOptions()
-            } else {
-                setSelectOptions()
-            }
-            
-        })  
-        }        
-    }
+    // console.log('bookState', bookState)
+   
+    useEffect(() => {
+        let booksCompared = false
+
+        if (!booksCompared) {
+         setCurrentBookState([bookState.filter(b => b.id === book.id)])
+         setSelectOptions(book)
+        }
+        return () => {
+            booksCompared = true
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [ bookState, book ])
 
     // function to set Select options, depending on current shelf
-    const setSelectOptions = () => {
+    const setSelectOptions = (currentBookState) => {
+        console.log('currentBookState', currentBookState)
+        // debugger
 
-            if ((currentBookState !== []) && (currentBookState.shelf === 'currentlyReading'))  {
+            if ((currentBookState !== undefined) && (currentBookState !== []) && (currentBookState.shelf === 'currentlyReading'))  {
                 setOptions([["currentlyReading", 'Currently Reading'], ["wantToRead", 'Want to read'], ["read", 'Read'], ['none', 'None']])
 
-            } else if ((currentBookState !== []) && (currentBookState.shelf === 'read')) {
+            } else if ((currentBookState !== undefined) && (currentBookState !== []) && (currentBookState.shelf === 'read')) {
                 setOptions([["read", 'Read'], ["currentlyReading", 'Currently Reading'], ["wantToRead", 'Want to read'], ['none', 'None']])
 
             }
-            else if ((currentBookState !== []) && (currentBookState.shelf === 'wantToRead')) {
+            else if ((currentBookState !== undefined) && (currentBookState !== []) && (currentBookState.shelf === 'wantToRead')) {
                 setOptions([["wantToRead", 'Want To Read'], ["currentlyReading", 'Currently Reading'], ["read", 'Read'], ['none', 'None']])
 
             }
@@ -45,34 +43,8 @@ const BookSelector = ({ bookState, book, shelfTitle, callGetbooks }) => {
     }
 
     
-    useEffect(() => {
-            let booksCompared = false
-
-            if (!booksCompared) {
-                compare()
-            }
-            return () => {
-                booksCompared = true
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentBookState])
-
-    
-    const changeShelf = async (book, shelfChosen) => {
-
-        try {
-            let res = await update(book, shelfChosen);
-
-            if(res) {
-                callGetbooks()
-            }
-            
-        } catch (error) { console.log(error.message) }
- 
-    }
-
     return (
-        <select onChange={e => changeShelf(book, e.target.value)}>
+        <select onChange={e => changingShelf(book, e.target.value)}>
             <option value={currentBookState.shelf} disabled>
                 Move to...
             </option>
@@ -82,6 +54,11 @@ const BookSelector = ({ bookState, book, shelfTitle, callGetbooks }) => {
             <option value={options[3][0]}>{options[3][1]}</option>
         </select>
     )
+}
+
+BookSelector.propTypes = {
+    book: PropTypes.object.isRequired,
+    bookState: PropTypes.array.isRequired
 }
 
 export default BookSelector;

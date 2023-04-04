@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { search } from '../BooksAPI'
 import Bookshelf from '../components/Bookshelf'
+import PropTypes from 'prop-types'
 
-const SearchPage = ({ bookState, callGetbooks }) => {
+const SearchPage = ({ bookState, callGetbooks, changingShelf }) => {
 
   // Search Terms allowed :
   const allowedSearchTerms= ['Android', 'Art', 'Artificial Intelligence', 'Astronomy', 'Austen', 'Baseball', 'Basketball', 'Bhagat', 'Biography', 'Brief', 'Business', 'Camus', 'Cervantes', 'Christie', 'Classics', 'Comics', 'Cook', 'Cricket', 'Cycling', 'Desai', 'Design', 'Development', 'Digital Marketing', 'Drama', 'Drawing', 'Dumas', 'Education', 'Everything', 'Fantasy', 'Film', 'Finance', 'First', 'Fitness', 'Football', 'Future', 'Games', 'Gandhi', 'Homer', 'Horror', 'Hugo', 'Ibsen', 'Journey', 'Kafka', 'King', 'Lahiri', 'Larsson', 'Learn', 'Literary Fiction', 'Make', 'Manage', 'Marquez', 'Money', 'Mystery', 'Negotiate', 'Painting', 'Philosophy', 'Photography', 'Poetry', 'Production', 'Programming', 'React', 'Redux', 'River', 'Robotics', 'Rowling', 'Satire', 'Science Fiction', 'Shakespeare', 'Singh', 'Swimming', 'Tale', 'Thrun', 'Time', 'Tolstoy', 'Travel', 'Ultimate', 'Virtual Reality', 'Web Development', 'iOS']
@@ -15,7 +16,7 @@ const SearchPage = ({ bookState, callGetbooks }) => {
 
   // Function to track queary inputs
   const getQuery = (value) => {
-    let currentInput = value.trim().toLowerCase()
+    let currentInput = value.toLowerCase()
     
     if(currentInput === '') {
       setSearchBookState([])
@@ -47,6 +48,9 @@ const SearchPage = ({ bookState, callGetbooks }) => {
   // Function to call Search API
   const searchBooks = async (query) => {
 
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+    await sleep(2000)
     // variable to check if the query comply with the allowed search terms of the Search API
     let tempQuery = allowedSearchTerms.filter(term => term.toLowerCase().includes(query)).map(ele => { return ele.toLowerCase()})
 
@@ -54,7 +58,7 @@ const SearchPage = ({ bookState, callGetbooks }) => {
 
       if(query !== '' && tempQuery.some( term => term.includes(query))) {
       try {
-        let res = await search(query, 20);
+        let res = await search(query.trim(), 20);
         
         if(res){
           
@@ -90,7 +94,7 @@ const SearchPage = ({ bookState, callGetbooks }) => {
           />
         </form>
       </div>
-      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelfTitle={'search-results'} books={searchBookState} inputState={inputState}/>) : (<div className="bookshelf">
+      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} changingShelf={changingShelf} shelfTitle={'search-results'} books={searchBookState} inputState={inputState}/>) : (<div className="bookshelf">
             <div className="bookshelf-books">
                 <p>No books matching the search</p>
             </div>
@@ -99,6 +103,10 @@ const SearchPage = ({ bookState, callGetbooks }) => {
     </div>
   )   
  } 
+}
+
+SearchPage.propTypes = {
+  bookState: PropTypes.array.isRequired
 }
 
 export default SearchPage;

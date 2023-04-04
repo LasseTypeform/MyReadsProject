@@ -3,7 +3,8 @@ import Book from './Book'
 import PropTypes from 'prop-types'
 
 
-const Bookshelf = ({ bookState, shelf, shelfTitle, books, callGetbooks, inputState }) => {
+
+const Bookshelf = ({ bookState, shelf, shelfTitle, books, changingShelf, inputState }) => {
 
     const [stateInBookshelf, setStateInBookshelf] = useState([])
 
@@ -30,7 +31,7 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, books, callGetbooks, inputSta
                 <div className="bookshelf-books">
                     <ol className="books-grid">
                         {(stateInBookshelf !== [] || stateInBookshelf !== {}) && (bookState) && (stateInBookshelf.map((book) => 
-                            (book.shelf === shelf) && (book.imageLinks) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} callGetbooks={callGetbooks} />))
+                            (book.shelf === shelf) && (book.imageLinks) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} changingShelf={changingShelf} />))
                         )}
                     </ol>
                 </div>

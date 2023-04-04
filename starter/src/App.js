@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import BookshelfContainer from './components/Bookshelf-container'
 import SearchPage from "./components/SearchPage";
-import { getAll } from './BooksAPI'
+import { getAll, update } from './BooksAPI'
 import {Route, Routes, Link } from 'react-router-dom'
 
 function App() {
@@ -17,7 +17,19 @@ function App() {
       setBookState(res)
     } catch (error) { console.log(error.message) }
   }
+//Function to change shelf of individual book
+const changeShelf = async (book, shelfChosen) => {
+  book.shelf = shelfChosen
+  try {
+      let res = await update(book, shelfChosen);
 
+      if(res) {
+        setBookState([...bookState.filter((b) => b.id !== book.id, book)])
+      }
+      
+  } catch (error) { console.log(error.message) }
+
+}
 
 // useEffect to retrieve all book from current bookselfs
   useEffect(() => {
@@ -29,7 +41,7 @@ function App() {
     return () => {
       booksRetrieved = true
     }
-  }, [ bookState ])
+  }, [ ])
 
   return (
     <div className="app">
@@ -39,13 +51,13 @@ function App() {
           <div className="list-books-title">
             <h1>MyReads</h1>
           </div>
-         {(bookState !== []) && (<BookshelfContainer bookState={bookState} callGetbooks={getbooks}/>)}
+         {(bookState !== []) && (<BookshelfContainer bookState={bookState} changingShelf={changeShelf}/>)}
           <div className="open-search">
             <Link to="/search">Add a book</Link>
           </div>
         </div>
         }/>
-        {(bookState !== []) && (<Route path="/search" element={<SearchPage bookState={bookState} callGetbooks={getbooks}/>}/>)}
+        {(bookState !== []) && (<Route path="/search" element={<SearchPage bookState={bookState} changingShelf={changeShelf}/>}/>)}
         </Routes>
     </div>
   );

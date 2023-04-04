@@ -1,8 +1,9 @@
 import React from 'react'
 import BookShelfChanger from './BookShelfChanger'
+import PropTypes from 'prop-types'
 
 
-const Book = ({ bookState, book, shelfTitle, callGetbooks }) => {
+const Book = ({ bookState, book, shelfTitle, changingShelf }) => {
 
     return (<li key={book.id}>
         <div className="book">
@@ -17,12 +18,17 @@ const Book = ({ bookState, book, shelfTitle, callGetbooks }) => {
                         }} 
                     ></div>)
                 }
-                {(book) && (<BookShelfChanger bookState={bookState} book={book} shelfTitle={shelfTitle} callGetbooks={callGetbooks}/>)}
+                {(book) && (<BookShelfChanger bookState={bookState} book={book} shelfTitle={shelfTitle} changingShelf={changingShelf} />)}
             </div>
             <div className="book-title">{book.title}</div>
             {(book.authors) && book.authors.map(author => <div key={author} className="book-authors">{author}</div>)}
         </div>
     </li>)
+}
+
+Book.propTypes = {
+    book: PropTypes.object.isRequired,
+    bookState: PropTypes.array.isRequired
 }
 
 export default Book;
