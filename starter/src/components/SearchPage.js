@@ -4,7 +4,7 @@ import { search } from '../BooksAPI'
 import Bookshelf from '../components/Bookshelf'
 import PropTypes from 'prop-types'
 
-const SearchPage = ({ bookState, callGetbooks, changingShelf }) => {
+const SearchPage = ({ bookState, changingShelf, shelfBeenChanged }) => {
 
   // Search Terms allowed :
   const allowedSearchTerms= ['Android', 'Art', 'Artificial Intelligence', 'Astronomy', 'Austen', 'Baseball', 'Basketball', 'Bhagat', 'Biography', 'Brief', 'Business', 'Camus', 'Cervantes', 'Christie', 'Classics', 'Comics', 'Cook', 'Cricket', 'Cycling', 'Desai', 'Design', 'Development', 'Digital Marketing', 'Drama', 'Drawing', 'Dumas', 'Education', 'Everything', 'Fantasy', 'Film', 'Finance', 'First', 'Fitness', 'Football', 'Future', 'Games', 'Gandhi', 'Homer', 'Horror', 'Hugo', 'Ibsen', 'Journey', 'Kafka', 'King', 'Lahiri', 'Larsson', 'Learn', 'Literary Fiction', 'Make', 'Manage', 'Marquez', 'Money', 'Mystery', 'Negotiate', 'Painting', 'Philosophy', 'Photography', 'Poetry', 'Production', 'Programming', 'React', 'Redux', 'River', 'Robotics', 'Rowling', 'Satire', 'Science Fiction', 'Shakespeare', 'Singh', 'Swimming', 'Tale', 'Thrun', 'Time', 'Tolstoy', 'Travel', 'Ultimate', 'Virtual Reality', 'Web Development', 'iOS']
@@ -26,6 +26,11 @@ const SearchPage = ({ bookState, callGetbooks, changingShelf }) => {
     }  
   }
 
+  // Function to set the right shelf after change in ShelfSelector.js
+  const setNewBookState = (b) =>{
+    console.log('check:', (searchBookState.forEach(ele => ele.id !== b.id)))
+    setSearchBookState((searchBookState.forEach(ele => ele.id !== b.id)) ? [...searchBookState, b] : [...searchBookState])   
+  }
   
   useEffect(() => {
     let searchHasBeenMade = false;
@@ -50,7 +55,7 @@ const SearchPage = ({ bookState, callGetbooks, changingShelf }) => {
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-    await sleep(2000)
+    await sleep(1000)
     // variable to check if the query comply with the allowed search terms of the Search API
     let tempQuery = allowedSearchTerms.filter(term => term.toLowerCase().includes(query)).map(ele => { return ele.toLowerCase()})
 
@@ -79,8 +84,6 @@ const SearchPage = ({ bookState, callGetbooks, changingShelf }) => {
   
   if(searchBookState !== {} || searchBookState !== []) {
 
-    // console.log('bookState on SearchPage', bookState)
-    // console.log('searchBookState on SearchPage', searchBookState)
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -97,7 +100,7 @@ const SearchPage = ({ bookState, callGetbooks, changingShelf }) => {
           />
         </form>
       </div>
-      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} changingShelf={changingShelf} shelfTitle={'Search Results'} books={searchBookState} inputState={inputState}/>) : (<div className="bookshelf">
+      {((searchBookState !== []) && ((searchBookState.error !== 'empty query') ? (<Bookshelf bookState={bookState} changingShelf={changingShelf} shelfTitle={'Search Results'} books={searchBookState} inputState={inputState} shelfBeenChanged={shelfBeenChanged} newBookstate={setNewBookState}/>) : (<div className="bookshelf">
             <div className="bookshelf-books">
                 <p>No books matching the search</p>
             </div>

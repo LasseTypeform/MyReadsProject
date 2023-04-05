@@ -3,8 +3,7 @@ import Book from './Book'
 import PropTypes from 'prop-types'
 
 
-
-const Bookshelf = ({ bookState, shelf, shelfTitle, books, changingShelf, inputState }) => {
+const Bookshelf = ({ bookState, shelf, shelfTitle, changingShelf, inputState, books, shelfBeenChanged, newBookstate }) => {
 
     const [stateInBookshelf, setStateInBookshelf] = useState([])
 
@@ -19,20 +18,20 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, books, changingShelf, inputSt
         return () => {
             tempBookState = true
         }
-    }, [bookState,  books, shelfTitle])
+    }, [bookState, books, shelfTitle, shelfBeenChanged])
 
 
-    if((shelfTitle === 'Search Results') && (stateInBookshelf === [] || inputState === '' || inputState === undefined)){
+    if((shelfTitle === 'Search Results') && (bookState === [] || inputState === '' || inputState === undefined)){
         return (<div className='no-books'></div>)
     }
-    else if ((stateInBookshelf.error !== 'empty query') && (stateInBookshelf !== [])) {
+    else if ((bookState.error !== 'empty query') && (bookState !== [])) {
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">{shelfTitle}</h2>
                 <div className="bookshelf-books">
                     <ol className="books-grid">
                         {(stateInBookshelf !== [] || stateInBookshelf !== {}) && (bookState) && (stateInBookshelf.map((book) => 
-                            (book.shelf === shelf) && (book.imageLinks) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} changingShelf={changingShelf} />))
+                            ((book.shelf === shelf) || (shelfTitle === 'Search Results')) && (book.imageLinks) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} changingShelf={changingShelf} books={books} shelfBeenChanged={shelfBeenChanged} newBookstate={newBookstate} />))
                         )}
                     </ol>
                 </div>
@@ -42,7 +41,6 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, books, changingShelf, inputSt
 }
 
 Bookshelf.propTypes = {
-    books: PropTypes.array.isRequired,
     bookState: PropTypes.array.isRequired
 }
 

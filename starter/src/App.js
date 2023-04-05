@@ -9,7 +9,7 @@ function App() {
   
   const [bookState, setBookState] = useState([]);
   
-
+  let shelfBeenChanged = false
 //Function to call backend for all books, which can be used in differnt components
 // This collection represents the books currently in the bookshelves in the app.
   const getbooks = async () => {
@@ -27,8 +27,11 @@ const changeShelf = async (book, shelfChosen) => {
 
       if(res) {
         setBookState([...bookState.filter((b) => b.id !== book.id, book)])
+        getbooks()
+        shelfBeenChanged = !shelfBeenChanged
+        console.log('shelf has been changed on book:', book)
       }
-      console.log('bookState after change', bookState)
+
   } catch (error) { console.log(error.message) }
 
 }
@@ -43,7 +46,7 @@ const changeShelf = async (book, shelfChosen) => {
     return () => {
       booksRetrieved = true
     }
-  }, [ ])
+  }, [])
 
   return (
     <div className="app">
@@ -59,7 +62,7 @@ const changeShelf = async (book, shelfChosen) => {
           </div>
         </div>
         }/>
-        {(bookState !== []) && (<Route path="/search" element={<SearchPage bookState={bookState} changingShelf={changeShelf}/>}/>)}
+        {(bookState !== []) && (<Route path="/search" element={<SearchPage bookState={bookState} changingShelf={changeShelf} shelfBeenChanged={shelfBeenChanged}/>}/>)}
         </Routes>
     </div>
   );
