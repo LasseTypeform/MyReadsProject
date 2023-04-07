@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ShelfSelector from './ShelfSelector'
 import PropTypes from 'prop-types'
 
-const BookShelfChanger = ({ bookState, book, shelfTitle, changingShelf, books, shelfBeenChanged, newBookstate }) => {
+const BookShelfChanger = ({ bookState, book, shelfTitle, changingShelf, shelfBeenChanged, newBookstate }) => {
 
     const [currentBook, setCurrentBook] = useState({}) 
 
@@ -16,11 +16,11 @@ const BookShelfChanger = ({ bookState, book, shelfTitle, changingShelf, books, s
         return () => {
             bookPassed = true
         }
-    }, [bookState, book, shelfTitle, changingShelf, books, shelfBeenChanged]);
+    }, [bookState, book, shelfTitle, changingShelf, shelfBeenChanged]);
 
     return (
         <div className="book-shelf-changer">
-            {(book)&& (bookState) && <ShelfSelector bookState={bookState} book={currentBook} shelfTitle={shelfTitle} changingShelf={changingShelf} books={books} shelfBeenChanged={shelfBeenChanged} newBookstate={newBookstate}/>}
+            {(book)&& (bookState) && <ShelfSelector bookState={bookState} book={currentBook} shelfTitle={shelfTitle} changingShelf={changingShelf} shelfBeenChanged={shelfBeenChanged} newBookstate={newBookstate}/>}
         </div>
     )
 }

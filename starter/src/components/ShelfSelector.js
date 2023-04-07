@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-const ShelfSelector = ({ bookState, book, changingShelf, books, shelfBeenChanged, shelfTitle, newBookstate }) => {
+const ShelfSelector = ({ bookState, book, changingShelf, shelfBeenChanged, shelfTitle, newBookstate }) => {
     const [options, setOptions] = useState([['', ''], ['', ''], ['', ''], ['', '']]);
     const [currentBookState, setCurrentBookState] = useState([]);
 
+    // console.log('bookstate in selector', bookState)
 
     const handleChange = (e) => {
         changingShelf(book, e.target.value)
-        if(shelfTitle === 'Search Results') {
+        if (shelfTitle === 'Search Results') {
             newBookstate(book)
+            changingShelf(book, e.target.value)
+            setSelectOptions(book, e.target.value)
+            setCurrentBookState(book)
         }
         setSelectOptions(book, e.target.value)
     }
@@ -23,6 +27,7 @@ const ShelfSelector = ({ bookState, book, changingShelf, books, shelfBeenChanged
                 bookState.forEach(b => {
                     if (b.id === book.id) {
                         setCurrentBookState(b)
+                        setSelectOptions(b, b.shelf)
                     }
                 });
             }
@@ -32,32 +37,89 @@ const ShelfSelector = ({ bookState, book, changingShelf, books, shelfBeenChanged
             booksCompared = true
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [bookState, book, books, shelfBeenChanged])
+    }, [bookState, book, shelfBeenChanged, shelfTitle])
 
     // function to set Select options, depending on current shelf
-    const setSelectOptions = (book, shelf) => {
+    const setSelectOptions = (bookInFunction, shelfInFunction) => {
 
-        if ((shelf !== undefined) && (book) && ((book.shelf === 'currentlyReading') || (currentBookState.shelf === 'currentlyReading'))) {
-            return setOptions([["currentlyReading", 'Currently Reading'], ["wantToRead", 'Want to read'], ["read", 'Read'], ['none', 'None']])
+        let tempOptions = [["currentlyReading", 'Currently Reading'], ["wantToRead", 'Want to read'], ["read", 'Read'], ['none', 'None']]
 
-        } else if ((shelf !== undefined) && (book) && ((currentBookState.shelf === 'read') || (book.shelf === 'read'))) {
-            return setOptions([["read", 'Read'], ["currentlyReading", 'Currently Reading'], ["wantToRead", 'Want to read'], ['none', 'None']])
+        let checkIfShelfExist
 
+            let currentShelfTitle
+
+        if((Object.keys(book).length !== 0)){
+        if((Object.keys(bookInFunction).length !== 0) && (currentBookState !== undefined)) {
+
+            // console.log('book', book)
+            // console.log('book', book)
+            // console.log('shelfInFunction', shelfInFunction)
+
+            
+            // debugger
+            
+            //     // debugger
+            //     checkIfShelfExist = bookState.filter(bb => bb.id === bookInFunction.id)
+            //     // debugger
+            //     if((checkIfShelfExist !== []) && (checkIfShelfExist.length > 0) && (bookState.filter(bb => bb.id === bookInFunction.id))){
+            //         currentShelfTitle = tempOptions.filter(option => {
+            //             if (option[0] === checkIfShelfExist[0].shelf) {
+            //                 let opshelf = option[1]
+            //                 return opshelf
+            //             } else if (checkIfShelfExist.length === 0) {
+            //                 return ['none', 'None']
+            //             }
+            //         })
+
+            //     }else if (checkIfShelfExist.length === 0) {
+            //         return ['none', 'None']
+            //     }else {
+            //         return ['none', 'None']
+            //     }
+                
+            // } 
+            // else 
+            if(shelfInFunction === 'Search Results') {
+                if(book.shelf === undefined){
+                    currentShelfTitle = [['none', 'None']]
+                }
+             }
+
+            if (book.shelf !== undefined) {
+                currentShelfTitle = tempOptions.filter(option => {
+                    if (option[0] === book.shelf) {
+                        let opshelf = option[1]
+                        return opshelf
+                    } 
+                })
+                
+            }
+            // if((Object.keys(currentShelfTitle).length !== 0)){}
+
+            if ((currentShelfTitle !== []) && (currentShelfTitle !== undefined)) {
+
+                if((Object.keys(currentShelfTitle).length !== 0)){
+                // console.log('currentShelfTitle', currentShelfTitle)
+                let currentOptions = tempOptions.filter(option => option[0] !== currentShelfTitle[0][0])
+                if (currentOptions !== undefined) {
+                    currentOptions.unshift([currentShelfTitle[0][0], currentShelfTitle[0][1]])
+                    return setOptions(currentOptions)
+                }
+               
+            }
+            
         }
-        else if ((shelf !== undefined) && (book) && ((currentBookState.shelf === 'wantToRead') || (book.shelf === 'wantToRead'))) {
-            return setOptions([["wantToRead", 'Want To Read'], ["currentlyReading", 'Currently Reading'], ["read", 'Read'], ['none', 'None']])
-
-        }
-        else if ((currentBookState.shelf === undefined || book.shelf === undefined) && (book)) {
-            return setOptions([["none", 'None'], ["currentlyReading", 'Currently Reading'], ["wantToRead", 'Want to read'], ["read", 'Read']])
-
-        }
+        
+        } 
     }
+    
+    }
+    // finance
 
-
+    
     return (
         <select onChange={handleChange}>
-            <option value={currentBookState.shelf} disabled>
+            <option value={options[0][1]} disabled>
                 Move to...
             </option>
             <option value={options[0][0]}>{options[0][1]}</option>

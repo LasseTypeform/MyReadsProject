@@ -3,24 +3,9 @@ import Book from './Book'
 import PropTypes from 'prop-types'
 
 
-const Bookshelf = ({ bookState, shelf, shelfTitle, changingShelf, inputState, books, shelfBeenChanged, newBookstate }) => {
+const Bookshelf = ({ bookState, shelf, shelfTitle, changingShelf, inputState, shelfBeenChanged, newBookstate }) => {
 
-    const [stateInBookshelf, setStateInBookshelf] = useState([])
-
-    useEffect(() => {
-        let tempBookState = false;
-
-        if (!tempBookState) {
-            if(shelfTitle === 'Search Results') {
-                setStateInBookshelf(books)
-            } else setStateInBookshelf(bookState)
-        }
-        return () => {
-            tempBookState = true
-        }
-    }, [bookState, books, shelfTitle, shelfBeenChanged])
-
-
+    // console.log('bookState in book state ', bookState)
     if((shelfTitle === 'Search Results') && (bookState === [] || inputState === '' || inputState === undefined)){
         return (<div className='no-books'></div>)
     }
@@ -30,8 +15,9 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, changingShelf, inputState, bo
                 <h2 className="bookshelf-title">{shelfTitle}</h2>
                 <div className="bookshelf-books">
                     <ol className="books-grid">
-                        {(stateInBookshelf !== [] || stateInBookshelf !== {}) && (bookState) && (stateInBookshelf.map((book) => 
-                            ((book.shelf === shelf) || (shelfTitle === 'Search Results')) && (book.imageLinks) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} changingShelf={changingShelf} books={books} shelfBeenChanged={shelfBeenChanged} newBookstate={newBookstate} />))
+                        {
+                        (bookState.map((book) => 
+                            ((book.shelf === shelf) || (shelfTitle === 'Search Results')) && (book.imageLinks) && (<Book key={book.id} book={book} shelf={book.shelf} bookState={bookState} shelfTitle={shelfTitle} changingShelf={changingShelf} shelfBeenChanged={shelfBeenChanged} newBookstate={newBookstate} />))
                         )}
                     </ol>
                 </div>
