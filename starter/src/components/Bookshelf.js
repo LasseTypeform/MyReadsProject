@@ -3,21 +3,39 @@ import Book from './Book'
 import PropTypes from 'prop-types'
 
 
-const Bookshelf = ({ bookState, shelf, shelfTitle, changingShelf, inputState, shelfBeenChanged, newBookstate }) => {
+const Bookshelf = ({ bookState, shelf, shelfTitle, changingShelf, inputState, shelfBeenChanged, callSearch, settingNewBookState }) => {
 
-    // console.log('bookState in book state ', bookState)
-    if((shelfTitle === 'Search Results') && (bookState === [] || inputState === '' || inputState === undefined)){
+    // console.log('bookState in bookShelf', bookState)
+    const [currentBookState, setCurrentBookState] = useState()
+
+    useEffect(() => {
+        let bookStateRevieved = false
+
+        if ((!bookStateRevieved) ) {
+
+            if ((bookState !== undefined) && (bookState.length > 0)) {
+             setCurrentBookState([...bookState])
+            }
+        }
+        return () => {
+            bookStateRevieved = true
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [bookState, shelf, shelfTitle, changingShelf, inputState, shelfBeenChanged, callSearch, settingNewBookState])
+
+    // console.log('currentBookState in bookShelf ', currentBookState)
+    if((shelfTitle === 'Search Results') && (currentBookState === [] || inputState === '' || inputState === undefined)){
         return (<div className='no-books'></div>)
     }
-    else if ((bookState.error !== 'empty query') && (bookState !== [])) {
+    else if ((bookState.error !== 'empty query') && (currentBookState !== [])) {
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">{shelfTitle}</h2>
                 <div className="bookshelf-books">
                     <ol className="books-grid">
                         {
-                        (bookState.map((book) => 
-                            ((book.shelf === shelf) || (shelfTitle === 'Search Results')) && (book.imageLinks) && (<Book key={book.id} book={book} shelf={book.shelf} bookState={bookState} shelfTitle={shelfTitle} changingShelf={changingShelf} shelfBeenChanged={shelfBeenChanged} newBookstate={newBookstate} />))
+                         (currentBookState !== undefined) && (currentBookState !== []) && (currentBookState.length > 0) && (currentBookState.map((currentBookState) => 
+                            ((currentBookState.shelf === shelf) || (shelfTitle === 'Search Results')) && (currentBookState.imageLinks) && (<Book key={currentBookState.id} book={currentBookState} shelf={currentBookState.shelf} bookState={bookState} shelfTitle={shelfTitle} changingShelf={changingShelf} shelfBeenChanged={shelfBeenChanged} callSearch={callSearch} inputState={inputState} settingNewBookState={settingNewBookState} />))
                         )}
                     </ol>
                 </div>

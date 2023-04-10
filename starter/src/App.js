@@ -7,6 +7,9 @@ import { Route, Routes, Link } from 'react-router-dom'
 
 function App() {
 
+    // Search Terms allowed :
+    const allowedSearchTerms= ['Android', 'Art', 'Artificial Intelligence', 'Astronomy', 'Austen', 'Baseball', 'Basketball', 'Bhagat', 'Biography', 'Brief', 'Business', 'Camus', 'Cervantes', 'Christie', 'Classics', 'Comics', 'Cook', 'Cricket', 'Cycling', 'Desai', 'Design', 'Development', 'Digital Marketing', 'Drama', 'Drawing', 'Dumas', 'Education', 'Everything', 'Fantasy', 'Film', 'Finance', 'First', 'Fitness', 'Football', 'Future', 'Games', 'Gandhi', 'Homer', 'Horror', 'Hugo', 'Ibsen', 'Journey', 'Kafka', 'King', 'Lahiri', 'Larsson', 'Learn', 'Literary Fiction', 'Make', 'Manage', 'Marquez', 'Money', 'Mystery', 'Negotiate', 'Painting', 'Philosophy', 'Photography', 'Poetry', 'Production', 'Programming', 'React', 'Redux', 'River', 'Robotics', 'Rowling', 'Satire', 'Science Fiction', 'Shakespeare', 'Singh', 'Swimming', 'Tale', 'Thrun', 'Time', 'Tolstoy', 'Travel', 'Ultimate', 'Virtual Reality', 'Web Development', 'iOS']
+
   const [bookState, setBookState] = useState([]);
 
   const [searchError, setSearchError] = useState(false)
@@ -23,15 +26,25 @@ function App() {
     } catch (error) { console.log(error.message) }
   }
   //Function to change shelf of individual book
-  const changeShelf = async (book, shelfChosen) => {
+  const changeShelf = async (book, shelfChosen, quearyFromSearch, page) => {
     book.shelf = shelfChosen
     try {
       let res = await update(book, shelfChosen);
 
       if (res) {
-        setBookState([...bookState.filter((b) => b.id !== book.id, book)])
+        if(page === 'Search Results') {
+        if((quearyFromSearch !== '') && (quearyFromSearch !== undefined)){
+        searchBooks(quearyFromSearch)
         shelfBeenChanged = !shelfBeenChanged
-        getbooks()
+        // console.log('quearyFromSearch', quearyFromSearch)
+        setSearchedBookState([...searchedBookState.filter((b) => b.id !== book.id, book)])
+        
+        } }
+        else{
+          shelfBeenChanged = !shelfBeenChanged
+          getbooks()
+        }
+        
       }
       shelfBeenChanged = !shelfBeenChanged
     } catch (error) { console.log(error.message) }
@@ -41,10 +54,11 @@ function App() {
   // Function to set the right shelf after change in ShelfSelector.js
   const setNewBookState = (b) => {
     setSearchedBookState((searchedBookState.forEach(ele => ele.id !== b.id)) ? [...searchedBookState, b] : [...searchedBookState])
-  }
+  }  
+
 
   // Function to call Search API
-  const searchBooks = async (query, allowedSearchTerms) => {
+  const searchBooks = async (query) => {
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -70,6 +84,7 @@ function App() {
 
                 let matchArray = []
                 let nonMatchingArray = []
+                let combinedArray = []
 
                 res.filter(r => {
                   let temp = bookState.filter(b => b.id === r.id)
@@ -89,11 +104,13 @@ function App() {
                 }
 
                 if ((matchArray.length > 0) && nonMatchingArray.length > 0) {
-                  let combinedArray = matchArray.concat(nonMatchingArray)
+                  combinedArray = matchArray.concat(nonMatchingArray)
                   //  console.log('combinedArray', combinedArray)
-                  setBookState(combinedArray)
                 }
-
+                if((combinedArray.length > 0)){
+                  setSearchedBookState(combinedArray)
+                }
+                // console.log('combinedArray', combinedArray)
               }
 
 
@@ -104,9 +121,10 @@ function App() {
           return searchError = true
         }
 
-      } if (query !== '') {
-        setSearchedBookState([])
-      }
+      } 
+      // if (query !== '') {
+      //   setSearchedBookState([])
+      // }
     }
   }
 
@@ -136,7 +154,7 @@ function App() {
             </div>
           </div>
         } />
-        {(bookState !== []) && (<Route path="/search" element={<SearchPage bookState={bookState} searchError={searchError} changingShelf={changeShelf} shelfBeenChanged={shelfBeenChanged} callSearch={searchBooks} newBookstate={setNewBookState} callGetbooks={getbooks} />} />)}
+        {(bookState.length > 0) && (<Route path="/search" element={<SearchPage searchedBookState={searchedBookState} searchError={searchError} changingShelf={changeShelf} shelfBeenChanged={shelfBeenChanged} callSearch={searchBooks}  callGetbooks={getbooks} settingNewBookState={setNewBookState} />} />)}
       </Routes>
     </div>
   );

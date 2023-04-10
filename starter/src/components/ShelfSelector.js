@@ -1,23 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-const ShelfSelector = ({ bookState, book, changingShelf, shelfBeenChanged, shelfTitle, newBookstate }) => {
+const ShelfSelector = ({ bookState, book, changingShelf, shelfBeenChanged, shelfTitle, callSearch, inputState, settingNewBookState }) => {
     const [options, setOptions] = useState([['', ''], ['', ''], ['', ''], ['', '']]);
     const [currentBookState, setCurrentBookState] = useState([]);
 
     // console.log('bookstate in selector', bookState)
 
+    // const handleChange = (e) => {
+    //     let tempID = currentBookState.id
+    //     if (shelfTitle === 'Search Results') {
+    //         let currentInput = inputState
+    //         let stateFromChangedShelf = changingShelf(book, e.target.value, currentInput).filter(b => b.id === tempID)
+    //         console.log('stateFromChangedShelf', stateFromChangedShelf)
+    //         if(stateFromChangedShelf.length > 0){
+    //         setCurrentBookState(stateFromChangedShelf[0])
+    //         setSelectOptions(stateFromChangedShelf[0], stateFromChangedShelf[0].shelf)
+    //         }
+    //     }
+    //     setSelectOptions(book, e.target.value)
+    // }
+
     const handleChange = (e) => {
-        changingShelf(book, e.target.value)
+        let tempID = currentBookState.id
         if (shelfTitle === 'Search Results') {
-            newBookstate(book)
+            console.log('search change shelf')
+            changingShelf(book, e.target.value, inputState, 'Search Results')
+            settingNewBookState(book)
+            let updatedBook = bookState.filter(b => b.id === tempID)
+            setSelectOptions(updatedBook, e.target.value)
+            
+        } else {
             changingShelf(book, e.target.value)
-            setSelectOptions(book, e.target.value)
-            setCurrentBookState(book)
         }
+        changingShelf(book, e.target.value)
         setSelectOptions(book, e.target.value)
     }
 
+    //Working:
+    // const handleChange = (e) => {
+    //     changingShelf(book, e.target.value)
+    //     if (shelfTitle === 'Search Results') {
+    //         let currentInput = inputState
+    //         changingShelf(book, e.target.value)
+    //         // callSearch(currentInput)
+    //         settingNewBookState(book)
+    //     }
+    //     setSelectOptions(book, e.target.value)
+    // }
+      //Working:
+ 
     useEffect(() => {
         let booksCompared = false
 
@@ -55,30 +87,6 @@ const ShelfSelector = ({ bookState, book, changingShelf, shelfBeenChanged, shelf
             // console.log('book', book)
             // console.log('shelfInFunction', shelfInFunction)
 
-            
-            // debugger
-            
-            //     // debugger
-            //     checkIfShelfExist = bookState.filter(bb => bb.id === bookInFunction.id)
-            //     // debugger
-            //     if((checkIfShelfExist !== []) && (checkIfShelfExist.length > 0) && (bookState.filter(bb => bb.id === bookInFunction.id))){
-            //         currentShelfTitle = tempOptions.filter(option => {
-            //             if (option[0] === checkIfShelfExist[0].shelf) {
-            //                 let opshelf = option[1]
-            //                 return opshelf
-            //             } else if (checkIfShelfExist.length === 0) {
-            //                 return ['none', 'None']
-            //             }
-            //         })
-
-            //     }else if (checkIfShelfExist.length === 0) {
-            //         return ['none', 'None']
-            //     }else {
-            //         return ['none', 'None']
-            //     }
-                
-            // } 
-            // else 
             if(shelfInFunction === 'Search Results') {
                 if(book.shelf === undefined){
                     currentShelfTitle = [['none', 'None']]
