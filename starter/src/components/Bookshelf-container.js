@@ -2,7 +2,7 @@ import React from 'react'
 import Bookshelf from './Bookshelf'
 import PropTypes from 'prop-types'
 
-const BookshelfContainer = ({bookState, changingShelf }) => {
+const BookshelfContainer = ({bookState, callGetbooks }) => {
 
   //Function to filter the books matching the same shelf
   const filterShelfs = (bookState, shelf) => {
@@ -12,16 +12,15 @@ const BookshelfContainer = ({bookState, changingShelf }) => {
     return ( 
     <div className="list-books-content">
     <div>
-    { (bookState) && (<Bookshelf bookState={bookState} changingShelf={changingShelf} shelf="currentlyReading" shelfTitle={'Currently Reading'} books={filterShelfs(bookState, "currentlyReading")}/>)}
-    { (bookState) && (<Bookshelf bookState={bookState} changingShelf={changingShelf} shelf="wantToRead" shelfTitle={'Want to read'} books={filterShelfs(bookState, "wantToRead")}/>)}
-    { (bookState) && (<Bookshelf bookState={bookState} changingShelf={changingShelf} shelf="read" shelfTitle={'Read'} books={filterShelfs(bookState, "read")}/>)}
+    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelf="currentlyReading" shelfTitle={'Currently Reading'} books={filterShelfs(bookState, "currentlyReading")}/>)}
+    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelf="wantToRead" shelfTitle={'Want to read'} books={filterShelfs(bookState, "wantToRead")}/>)}
+    { (bookState) && (<Bookshelf bookState={bookState} callGetbooks={callGetbooks} shelf="read" shelfTitle={'Read'} books={filterShelfs(bookState, "read")}/>)}
     </div>
   </div> )
 
 }
 
-BookshelfContainer.propTypes = {
-  bookState: PropTypes.array.isRequired,
+Bookshelf.propTypes = {
+  bookState: PropTypes.array.isRequired
 }
-
 export default BookshelfContainer;

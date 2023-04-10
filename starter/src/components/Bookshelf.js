@@ -3,39 +3,34 @@ import Book from './Book'
 import PropTypes from 'prop-types'
 
 
-const Bookshelf = ({ bookState, shelf, shelfTitle, changingShelf, inputState, shelfBeenChanged, callSearch, settingNewBookState }) => {
+const Bookshelf = ({ bookState, shelf, shelfTitle, books, callGetbooks, inputState }) => {
 
-    // console.log('bookState in bookShelf', bookState)
-    const [currentBookState, setCurrentBookState] = useState()
+    const [stateInBookshelf, setStateInBookshelf] = useState([])
 
     useEffect(() => {
-        let bookStateRevieved = false
+        let tempBookState = false;
 
-        if ((!bookStateRevieved) ) {
-
-            if ((bookState !== undefined) && (bookState.length > 0)) {
-             setCurrentBookState([...bookState])
-            }
+        if (!tempBookState) {
+            if(shelfTitle === 'search-results') {
+                setStateInBookshelf(books)
+            } else setStateInBookshelf(bookState)
         }
         return () => {
-            bookStateRevieved = true
+            tempBookState = true
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [bookState, shelf, shelfTitle, changingShelf, inputState, shelfBeenChanged, callSearch, settingNewBookState])
+    }, [bookState,  books, shelfTitle])
 
-    // console.log('currentBookState in bookShelf ', currentBookState)
-    if((shelfTitle === 'Search Results') && (currentBookState === [] || inputState === '' || inputState === undefined)){
+    if((shelfTitle === 'search-results') && (stateInBookshelf === [] || inputState === '' || inputState === undefined)){
         return (<div className='no-books'></div>)
     }
-    else if ((bookState.error !== 'empty query') && (currentBookState !== [])) {
+    else if ((stateInBookshelf.error !== 'empty query') && (stateInBookshelf !== [])) {
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">{shelfTitle}</h2>
                 <div className="bookshelf-books">
                     <ol className="books-grid">
-                        {
-                         (currentBookState !== undefined) && (currentBookState !== []) && (currentBookState.length > 0) && (currentBookState.map((currentBookState) => 
-                            ((currentBookState.shelf === shelf) || (shelfTitle === 'Search Results')) && (currentBookState.imageLinks) && (<Book key={currentBookState.id} book={currentBookState} shelf={currentBookState.shelf} bookState={bookState} shelfTitle={shelfTitle} changingShelf={changingShelf} shelfBeenChanged={shelfBeenChanged} callSearch={callSearch} inputState={inputState} settingNewBookState={settingNewBookState} />))
+                        {(stateInBookshelf !== [] || stateInBookshelf !== {}) && (bookState) && (stateInBookshelf.map((book) => 
+                            (book.shelf === shelf) && (book.imageLinks) && (<Book key={book.id} book={book} bookState={bookState} shelfTitle={shelfTitle} callGetbooks={callGetbooks} />))
                         )}
                     </ol>
                 </div>
@@ -45,6 +40,7 @@ const Bookshelf = ({ bookState, shelf, shelfTitle, changingShelf, inputState, sh
 }
 
 Bookshelf.propTypes = {
+    books: PropTypes.array.isRequired,
     bookState: PropTypes.array.isRequired
 }
 
